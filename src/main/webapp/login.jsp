@@ -7,7 +7,30 @@
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <title>Log In</title>
 </head>
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/bootstrap-5.3.2-dist/css/bootstrap.min.css">
+    <script src="/bootstrap-5.3.2-dist/js/bootstrap.bundle.js"></script>
+    <title>Log In</title>
+</head>
 <body>
+	<%
+		String unm = null, pwd = null;
+		Cookie ckArr[] = request.getCookies();
+		if (ckArr != null) {
+			for (Cookie c: ckArr) {
+				if (c.getName().equalsIgnoreCase("unm")) {
+					unm = c.getValue();
+				}
+				if (c.getName().equalsIgnoreCase("pass")) {
+					pwd = c.getValue();
+				}
+			}
+		}
+	%>>
     <header style="padding-top: 70px">
     	    <!-- NavBar -->
     <nav class="navbar fixed-top navbar-dark bg-dark navbar-expand-lg">
@@ -46,13 +69,19 @@
                             <form action="CheckUser" method="post">
                                 <div class="mb-3">
                                     <label for="username" class="form-label">Username</label>
-                                    <input type="text" name="unm" id="username" class="form-control" placeholder="Username" aria-describedby="usernameHelp">
+                                    <input type="text" name="unm" id="username" class="form-control" placeholder="Username" aria-describedby="usernameHelp" value="<%=unm %>">
                                 </div>
                                 <div class="mb-3">
                                     <label for="password" class="form-label">Password</label>
                                     <!-- Changed type to password for security -->
-                                    <input type="password" name="pass" id="password" class="form-control" placeholder="Password" aria-describedby="passwordHelp">
+                                    <input type="password" name="pass" id="password" class="form-control" placeholder="Password" aria-describedby="passwordHelp" value="<%=pwd %>">
                                 </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="chk" value="yes" id="flexCheckDefault">
+                                    <label class="form-check-label" for="flexCheckDefault">
+                                      Remember Me
+                                    </label>
+                                  </div>
                                 <div class="mb-3 d-flex justify-content-center">
                                     <button type="submit" class="btn btn-primary">Log In</button>
                                 </div>

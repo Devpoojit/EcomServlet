@@ -10,6 +10,7 @@ import java.sql.SQLException;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -49,6 +50,7 @@ public class CheckUser extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String unm=request.getParameter("unm");
 		String pass=request.getParameter("pass");
+		String chk = request.getParameter("chk");
 		response.setContentType("text/html");
 		
 		System.out.println("unm : " + unm);
@@ -64,6 +66,14 @@ public class CheckUser extends HttpServlet {
 				HttpSession session=request.getSession();
 				session.setAttribute("username", unm);
 				String utype=rs.getString(3);
+				if (chk != null) {
+					Cookie ck1 = new Cookie("unm", unm);
+					Cookie ck2 = new Cookie("pass", pass);
+					ck1.setMaxAge(60*60*24);
+					ck2.setMaxAge(60);
+					response.addCookie(ck1);
+					response.addCookie(ck2);
+				}
 				if(utype.equalsIgnoreCase("Admin"))
 					response.sendRedirect("adminHome.jsp");
 				else if(utype.equalsIgnoreCase("Buyer"))
@@ -72,15 +82,21 @@ public class CheckUser extends HttpServlet {
 					response.sendRedirect("sellersHome.jsp");
 			}
 			else
-				//out.write("<h1>Invalid credentials!!!!!");
 				out.write(
-				    "<h1>User Registered Successfully...</h1>" +
-				    "<script>" +
-				    "setTimeout(function() {" +
-				    "    window.location.href = 'login.jsp';" +
-				    "}, 5000);" +
-				    "</script>"
-				);
+					    "<h1>Invalid Credentials</h1>" +
+					    "<p>Redirecting in <span id='countdown'>5</span> seconds...</p>" +
+					    "<script>" +
+					    "var seconds = 5;" +
+					    "var interval = setInterval(function() {" +
+					    "    document.getElementById('countdown').textContent = --seconds;" +
+					    "    if (seconds <= 0) {" +
+					    "        clearInterval(interval);" +
+					    "        window.location.href = 'login.jsp';" +
+					    "    }" +
+					    "}, 1000);" +
+					    "</script>"
+					);
+
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

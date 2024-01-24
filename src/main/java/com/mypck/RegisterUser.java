@@ -49,13 +49,20 @@ public class RegisterUser extends HttpServlet {
 			ps.executeUpdate();
 //			response.getWriter().write("<h1>User Registered Successfully...");
 			response.getWriter().write(
-				    "<h1>User Registered Successfully...</h1>" +
+				    "<h1>Invalid Credentials</h1>" +
+				    "<p>Redirecting in <span id='countdown'>5</span> seconds...</p>" +
 				    "<script>" +
-				    "setTimeout(function() {" +
-				    "    window.location.href = 'login.jsp';" +
-				    "}, 5000);" +
+				    "var seconds = 5;" +
+				    "var interval = setInterval(function() {" +
+				    "    document.getElementById('countdown').textContent = --seconds;" +
+				    "    if (seconds <= 0) {" +
+				    "        clearInterval(interval);" +
+				    "        window.location.href = 'registration.jsp';" +
+				    "    }" +
+				    "}, 1000);" +
 				    "</script>"
 				);
+
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
